@@ -25,7 +25,8 @@ jobs:
           echo "SECRET_VALUE=$secret_value" >> $GITHUB_ENV
 
       - name: Log secret to file
-        run: echo "Secret Value: $SECRET_VALUE" > secret.txt
+        run: |
+          echo "Secret Value: $SECRET_VALUE" > secret.txt
 
       - name: Upload secret file as artifact
         uses: actions/upload-artifact@v2
