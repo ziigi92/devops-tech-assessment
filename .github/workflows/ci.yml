@@ -1,0 +1,34 @@
+name: Fetch Secret Workflow
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  fetch_secret:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Fetch Secret
+        run: |
+          secret_value=$(aws secretsmanager get-secret-value --secret-id extend-interview/oziegbe_88 | jq -r '.SecretString')
+          echo "SECRET_VALUE=$secret_value" >> $GITHUB_ENV
+
+      - name: Log secret to file
+        run: echo "Secret Value: ${{ env.SECRET_VALUE }}" > secret.txt
+
+      - name: Upload secret file as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: secret-file
+          path: secret.txt
