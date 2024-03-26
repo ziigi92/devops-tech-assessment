@@ -1,16 +1,18 @@
 provider "aws" {
-  region = "us-east-1"
+  region = var.region
 }
+
 resource "aws_secretsmanager_secret" "interview_secret" {
-  name = "extend-interview/francis"
+  name = var.secret_name
 }
 
 resource "aws_secretsmanager_secret_version" "example" {
   secret_id     = aws_secretsmanager_secret.interview_secret.id
-  secret_string = "{\"date\":\"03/25/2024\"}"
+  secret_string = jsonencode({"date" = var.secret_date})
 }
+
 resource "aws_iam_role" "interview_bot" {
-  name = "interview-bot"
+  name = var.iam_role_names["bot"]
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -27,7 +29,7 @@ resource "aws_iam_role" "interview_bot" {
 }
 
 resource "aws_iam_role" "interview_developer" {
-  name = "interview-developer"
+  name = var.iam_role_names["developer"]
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
