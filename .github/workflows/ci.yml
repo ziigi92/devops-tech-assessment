@@ -21,7 +21,7 @@ jobs:
 
       - name: Fetch Secret
         run: |
-          secret_value=$(aws secretsmanager get-secret-value --secret-id extend-interview/oziegbe_88 | jq -r '.SecretString')
+          secret_value=$(aws secretsmanager get-secret-value --secret-id extend-interview/francis2 | jq -r '.SecretString')
           echo "SECRET_VALUE=$secret_value" >> $GITHUB_ENV
 
       - name: Log secret to file
